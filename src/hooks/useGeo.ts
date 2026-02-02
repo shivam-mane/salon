@@ -17,8 +17,8 @@ export function useGeo() {
           lng: pos.coords.longitude
         });
       },
-      () => {
-        setError("Location permission denied");
+      (err) => {
+        setError("Location permission blocked");
       }
     );
   }, []);
