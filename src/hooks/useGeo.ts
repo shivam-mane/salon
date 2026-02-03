@@ -1,14 +1,27 @@
+import { useEffect, useState } from "react";
 
-import { useEffect, useState } from 'react'
+export function useGeo() {
+  const [coords, setCoords] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
-export function useGeo(){
-  const [pos,setPos] = useState<any>(null)
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setError("Geolocation not supported");
+      return;
+    }
 
-  useEffect(()=>{
-    navigator.geolocation.getCurrentPosition(p=>
-      setPos({lat:p.coords.latitude,lng:p.coords.longitude})
-    )
-  },[])
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setCoords({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
+        });
+      },
+      (err) => {
+        setError("Location permission blocked");
+      }
+    );
+  }, []);
 
-  return pos
+  return { coords, error };
 }
